@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>EntertainmentOS</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0f;
+    color: #f0eee8;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    min-height: 100vh;
+  }
+
+  header {
+    padding: 2rem 2rem 1rem;
+    border-bottom: 0.5px solid rgba(255,255,255,0.08);
+  }
+
+  .logo {
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #f0eee8;
+  }
+
+  .logo span {
+    color: #7F77DD;
+  }
+
+  .tagline {
+    font-size: 0.75rem;
+    color: rgba(240,238,232,0.4);
+    margin-top: 2px;
+    letter-spacing: 0.05em;
+  }
+
+  .hero {
+    padding: 4rem 2rem 2rem;
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: #f0eee8;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: #7F77DD;
+  }
+
+  .hero p {
+    font-size: 1rem;
+    color: rgba(240,238,232,0.5);
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+  }
+
+  .search-wrap {
+    display: flex;
+    gap: 10px;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .search-wrap input {
+    flex: 1;
+    padding: 0.85rem 1.2rem;
+    background: rgba(255,255,255,0.06);
+    border: 0.5px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    color: #f0eee8;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-wrap input::placeholder { color: rgba(240,238,232,0.3); }
+  .search-wrap input:focus { border-color: #7F77DD; }
+
+  .search-wrap button {
+    padding: 0.85rem 1.6rem;
+    background: #7F77DD;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .search-wrap button:hover { background: #534AB7; }
+  .search-wrap button:active { transform: scale(0.97); }
+
+  .results {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 2rem 4rem;
+  }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+
+  .card:hover {
+    border-color: rgba(127,119,221,0.5);
+    transform: translateY(-2px);
+  }
+
+  .card-poster {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    background: rgba(255,255,255,0.06);
+    display: block;
+  }
+
+  .card-poster-placeholder {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background: rgba(255,255,255,0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.15);
+    font-size: 0.8rem;
+  }
+
+  .card-body { padding: 1rem; }
+
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    color: #f0eee8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-meta {
+    font-size: 0.75rem;
+    color: rgba(240,238,232,0.4);
+    margin-bottom: 0.75rem;
+  }
+
+  .card-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: #EF9F27;
+    margin-bottom: 0.75rem;
+  }
+
+  .platforms {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 0.5rem;
+  }
+
+  .platform-badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+
+  .platform-badge:hover { opacity: 0.8; }
+
+  .badge-subscription { background: rgba(29,158,117,0.2); color: #5DCAA5; border: 0.5px solid rgba(29,158,117,0.3); }
+  .badge-rent        { background: rgba(186,117,23,0.2); color: #FAC775; border: 0.5px solid rgba(186,117,23,0.3); }
+  .badge-buy         { background: rgba(53,74,183,0.2);  color: #85B7EB; border: 0.5px solid rgba(53,74,183,0.3); }
+  .badge-free        { background: rgba(99,153,34,0.2);  color: #97C459; border: 0.5px solid rgba(99,153,34,0.3); }
+
+  .leaving-soon {
+    font-size: 0.7rem;
+    color: #F09595;
+    margin-top: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .leaving-soon::before {
+    content: '⚠';
+    font-size: 0.65rem;
+  }
+
+  .no-platforms {
+    font-size: 0.75rem;
+    color: rgba(240,238,232,0.25);
+    font-style: italic;
+  }
+
+  .status {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: rgba(240,238,232,0.35);
+    font-size: 0.9rem;
+  }
+
+  .loading-dots::after {
+    content: '';
+    animation: dots 1.2s steps(3, end) infinite;
+  }
+
+  @keyframes dots {
+    0%   { content: '.'; }
+    33%  { content: '..'; }
+    66%  { content: '...'; }
+    100% { content: ''; }
+  }
+
+  .error-msg {
+    text-align: center;
+    padding: 2rem;
+    color: #F09595;
+    font-size: 0.9rem;
+    background: rgba(240,149,149,0.05);
+    border-radius: 10px;
+    border: 0.5px solid rgba(240,149,149,0.15);
+  }
+
+  .country-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .country-btn {
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    border: 0.5px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: rgba(240,238,232,0.5);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .country-btn.active {
+    border-color: #7F77DD;
+    color: #7F77DD;
+    background: rgba(127,119,221,0.1);
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(240,238,232,0.3);
+    margin-bottom: 1.25rem;
+    margin-top: 0.5rem;
+  }
+
+  .detail-panel {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,15,0.92);
+    z-index: 100;
+    overflow-y: auto;
+    padding: 2rem;
+  }
+
+  .detail-panel.open { display: block; }
+
+  .detail-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #13131a;
+    border-radius: 16px;
+    border: 0.5px solid rgba(255,255,255,0.1);
+    overflow: hidden;
+  }
+
+  .detail-top {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .detail-poster {
+    width: 130px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
+  .detail-info { flex: 1; }
+
+  .detail-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+
+  .detail-meta {
+    font-size: 0.8rem;
+    color: rgba(240,238,232,0.4);
+    margin-bottom: 0.75rem;
+  }
+
+  .detail-plot {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: rgba(240,238,232,0.65);
+    margin-bottom: 1rem;
+  }
+
+  .detail-platforms {
+    padding: 0 1.5rem 1.5rem;
+    border-top: 0.5px solid rgba(255,255,255,0.07);
+    padding-top: 1.2rem;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    background: rgba(255,255,255,0.08);
+    border: none;
+    color: #f0eee8;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .platform-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0;
+    border-bottom: 0.5px solid rgba(255,255,255,0.05);
+    font-size: 0.85rem;
+  }
+
+  .platform-row:last-child { border-bottom: none; }
+
+  .platform-name { font-weight: 500; }
+
+  .platform-type {
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .go-btn {
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    border-radius: 6px;
+    background: rgba(127,119,221,0.15);
+    color: #AFA9EC;
+    border: 0.5px solid rgba(127,119,221,0.3);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+
+  .go-btn:hover { background: rgba(127,119,221,0.3); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Entertainment<span>OS</span></div>
+  <div class="tagline">One search. Every platform.</div>
+</header>
+
+<div class="hero">
+  <h1>Stop switching apps.<br><em>Find everything here.</em></h1>
+  <p>Search any movie or show — see every platform it's on, whether it's included or rent/buy, and if it's leaving soon.</p>
+
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Search movies, shows..." />
+    <button onclick="doSearch()">Search</button>
+  </div>
+
+  <div class="country-row">
+    <span style="font-size:0.75rem; color:rgba(240,238,232,0.3); align-self:center;">Country:</span>
+    <button class="country-btn active" data-country="in" onclick="setCountry(this)">🇮🇳 India</button>
+    <button class="country-btn" data-country="us" onclick="setCountry(this)">🇺🇸 USA</button>
+    <button class="country-btn" data-country="ca" onclick="setCountry(this)">🇨🇦 Canada</button>
+  </div>
+</div>
+
+<div class="results" id="results"></div>
+
+<div class="detail-panel" id="detailPanel">
+  <div class="detail-inner" style="position:relative;">
+    <button class="close-btn" onclick="closeDetail()">✕</button>
+    <div class="detail-top">
+      <img id="detailPoster" class="detail-poster" src="" alt="" />
+      <div class="detail-info">
+        <div class="detail-title" id="detailTitle"></div>
+        <div class="detail-meta" id="detailMeta"></div>
+        <div class="detail-plot" id="detailPlot"></div>
+        <div class="card-rating" id="detailRating"></div>
+      </div>
+    </div>
+    <div class="detail-platforms">
+      <div class="section-label">Available on</div>
+      <div id="detailPlatformList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const OMDB_KEY   = '1aca7bc1';
+const MOTN_KEY   = 'motn-key-v4-g9Zb1FUC1jl39ze7KgyZz4vA3yhdiMaC';
+
+let selectedCountry = 'in';
+
+function setCountry(btn) {
+  document.querySelectorAll('.country-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedCountry = btn.dataset.country;
+}
+
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
+
+async function doSearch() {
+  const query = document.getElementById('searchInput').value.trim();
+  if (!query) return;
+
+  const container = document.getElementById('results');
+  container.innerHTML = `<div class="status"><span class="loading-dots">Searching</span></div>`;
+
+  try {
+    const omdbRes = await fetch(
+      `https://www.omdbapi.com/?s=${encodeURIComponent(query)}&apikey=${OMDB_KEY}`
+    );
+    const omdbData = await omdbRes.json();
+
+    if (omdbData.Response === 'False') {
+      container.innerHTML = `<div class="error-msg">No results found for "<strong>${query}</strong>". Try a different title.</div>`;
+      return;
+    }
+
+    const items = omdbData.Search.slice(0, 9);
+    container.innerHTML = `<div class="section-label">${items.length} results for "${query}"</div><div class="result-grid" id="grid"></div>`;
+    const grid = document.getElementById('grid');
+
+    for (const item of items) {
+      const card = buildSkeletonCard(item);
+      grid.appendChild(card);
+      enrichCard(item, card);
+    }
+
+  } catch (err) {
+    container.innerHTML = `<div class="error-msg">Something went wrong. Check your API keys and internet connection.</div>`;
+  }
+}
+
+function buildSkeletonCard(item) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    ${item.Poster && item.Poster !== 'N/A'
+      ? `<img class="card-poster" src="${item.Poster}" alt="${item.Title}" loading="lazy" />`
+      : `<div class="card-poster-placeholder">No poster</div>`}
+    <div class="card-body">
+      <div class="card-title">${item.Title}</div>
+      <div class="card-meta">${item.Year} · ${item.Type === 'movie' ? 'Movie' : item.Type === 'series' ? 'Series' : item.Type}</div>
+      <div class="platforms" id="platforms-${item.imdbID}">
+        <span style="font-size:0.72rem; color:rgba(240,238,232,0.25);">Loading availability…</span>
+      </div>
+    </div>`;
+  card.addEventListener('click', () => openDetail(item));
+  return card;
+}
+
+async function enrichCard(item, card) {
+  try {
+    const streamRes = await fetch(
+      `https://streaming-availability.p.rapidapi.com/shows/${item.imdbID}?country=${selectedCountry}`,
+      {
+        headers: {
+          'x-rapidapi-key': MOTN_KEY,
+          'x-rapidapi-host': 'streaming-availability.p.rapidapi.com'
+        }
+      }
+    );
+
+    if (!streamRes.ok) throw new Error('Stream fetch failed');
+    const streamData = await streamRes.json();
+    const platformDiv = document.getElementById(`platforms-${item.imdbID}`);
+    if (!platformDiv) return;
+
+    const options = streamData.streamingOptions?.[selectedCountry] || [];
+    if (options.length === 0) {
+      platformDiv.innerHTML = `<span class="no-platforms">Not streaming in this region</span>`;
+      return;
+    }
+
+    card._streamData = streamData;
+
+    let html = '';
+    const seen = new Set();
+    for (const opt of options.slice(0, 5)) {
+      const key = `${opt.service?.name}-${opt.type}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      const name = opt.service?.name || 'Unknown';
+      const type = opt.type;
+      const link = opt.link || '#';
+      const badgeClass = type === 'subscription' ? 'badge-subscription'
+                       : type === 'rent' ? 'badge-rent'
+                       : type === 'buy' ? 'badge-buy'
+                       : 'badge-free';
+      const label = type === 'subscription' ? name
+                  : type === 'rent' ? `${name} · Rent`
+                  : type === 'buy' ? `${name} · Buy`
+                  : `${name} · Free`;
+
+      html += `<a class="platform-badge ${badgeClass}" href="${link}" target="_blank" onclick="event.stopPropagation()">${label}</a>`;
+
+      if (opt.expiresSoon || (opt.leaving && opt.leaving < Date.now()/1000 + 86400*14)) {
+        html += `<div class="leaving-soon">Leaving soon from ${name}</div>`;
+      }
+    }
+    platformDiv.innerHTML = html;
+
+  } catch {
+    const platformDiv = document.getElementById(`platforms-${item.imdbID}`);
+    if (platformDiv) platformDiv.innerHTML = `<span class="no-platforms">Availability unavailable</span>`;
+  }
+}
+
+async function openDetail(item) {
+  document.getElementById('detailPanel').classList.add('open');
+  document.getElementById('detailTitle').textContent = item.Title;
+  document.getElementById('detailMeta').textContent = `${item.Year} · ${item.Type}`;
+  document.getElementById('detailPlot').textContent = 'Loading details…';
+  document.getElementById('detailRating').textContent = '';
+  document.getElementById('detailPlatformList').innerHTML = '<div style="color:rgba(240,238,232,0.3); font-size:0.85rem;">Loading…</div>';
+
+  if (item.Poster && item.Poster !== 'N/A') {
+    document.getElementById('detailPoster').src = item.Poster;
+  }
+
+  try {
+    const omdbFull = await fetch(`https://www.omdbapi.com/?i=${item.imdbID}&apikey=${OMDB_KEY}`);
+    const fullData = await omdbFull.json();
+    document.getElementById('detailPlot').textContent = fullData.Plot !== 'N/A' ? fullData.Plot : 'No plot available.';
+    document.getElementById('detailMeta').textContent = `${fullData.Year} · ${fullData.Genre} · ${fullData.Runtime}`;
+    if (fullData.imdbRating !== 'N/A') {
+      document.getElementById('detailRating').textContent = `★ ${fullData.imdbRating} / 10`;
+    }
+  } catch {}
+
+  try {
+    const streamRes = await fetch(
+      `https://streaming-availability.p.rapidapi.com/shows/${item.imdbID}?country=${selectedCountry}`,
+      {
+        headers: {
+          'x-rapidapi-key': MOTN_KEY,
+          'x-rapidapi-host': 'streaming-availability.p.rapidapi.com'
+        }
+      }
+    );
+    const streamData = await streamRes.json();
+    const options = streamData.streamingOptions?.[selectedCountry] || [];
+
+    const listDiv = document.getElementById('detailPlatformList');
+    if (options.length === 0) {
+      listDiv.innerHTML = `<div style="color:rgba(240,238,232,0.3); font-size:0.85rem; font-style:italic;">Not available on any platform in this region.</div>`;
+      return;
+    }
+
+    const seen = new Set();
+    let html = '';
+    for (const opt of options) {
+      const key = `${opt.service?.name}-${opt.type}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      const name = opt.service?.name || 'Unknown';
+      const type = opt.type;
+      const link = opt.link || '#';
+      const badgeClass = type === 'subscription' ? 'badge-subscription'
+                       : type === 'rent' ? 'badge-rent'
+                       : type === 'buy' ? 'badge-buy' : 'badge-free';
+      const typeLabel = type === 'subscription' ? 'Included' : type === 'rent' ? 'Rent' : type === 'buy' ? 'Buy' : 'Free';
+
+      let leavingHtml = '';
+      if (opt.expiresSoon) {
+        leavingHtml = `<span style="font-size:0.72rem; color:#F09595; margin-left:8px;">⚠ Leaving soon</span>`;
+      }
+
+      html += `
+        <div class="platform-row">
+          <span class="platform-name">${name}${leavingHtml}</span>
+          <span class="platform-type platform-badge ${badgeClass}">${typeLabel}</span>
+          <a class="go-btn" href="${link}" target="_blank">Watch →</a>
+        </div>`;
+    }
+    listDiv.innerHTML = html;
+
+  } catch {
+    document.getElementById('detailPlatformList').innerHTML = `<div style="color:#F09595; font-size:0.85rem;">Could not load streaming availability.</div>`;
+  }
+}
+
+function closeDetail() {
+  document.getElementById('detailPanel').classList.remove('open');
+}
+
+document.getElementById('detailPanel').addEventListener('click', function(e) {
+  if (e.target === this) closeDetail();
+});
+</script>
+</body>
+</html>
