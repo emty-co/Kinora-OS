@@ -2,10 +2,22 @@
 
 > *One OS. Every platform. Every story.*
 
-**Kinora OS** is not another streaming app. It is an operating system built specifically for your living room — a single intelligent layer that unifies every OTT platform, game library, music service, hardware device, and ticketing platform you own. Built for TVs. Built around you, not the platform.
+**Kinora OS** is an unified media Operating System.
 
 ---
+# The Name
 
+<cite index="1-1">The Kinora was an early motion picture device invented by Auguste and Louis Lumière in 1895</cite> — the same duo who gave the world the Cinématographe and, with it, the birth of cinema.
+
+<cite index="5-1">It was the first home movie entertainment system.</cite> <cite index="9-1">Instead of projecting moving images on a screen, the Kinora used a flipbook mechanism to animate hundreds of paper-based photographs attached to a reel. By placing the reel on the viewer and turning a crank, the photographs came to life.</cite>
+
+<cite index="5-1">Kinora reels could be purchased or rented for home use. From 1908, a camera was available for people to make their own Kinora home movies — preserving family memories in motion.</cite>
+
+In other words: the Kinora was the original attempt to bring all moving image entertainment into the home. We're finishing what they started.
+
+Kinora OS is not another streaming app. It is an operating system built specifically for your living room — a single intelligent layer that unifies every OTT platform, game library, music service, hardware device, and ticketing platform you own. Built for TVs. Built around you, not the platform.
+
+---
 ## The Problem
 
 - You pay for 4–5 OTT subscriptions and still can't find what you want to watch
@@ -106,7 +118,7 @@ Deep-dive mode for every piece of content you love:
 
 Every commit is a chapter. Every bug is a scene. This is a build-in-public founder journey — documented as it happens, shared as it's made.
 
-Follow the journey: **[your handle / channel here]**
+Follow the journey: **https://instagram.com/emty.mov**
 
 ---
 
